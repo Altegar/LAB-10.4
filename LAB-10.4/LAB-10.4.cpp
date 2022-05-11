@@ -7,6 +7,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 #include <string>
 #include <Windows.h>
 
@@ -34,7 +36,7 @@ void PrintTXT(char* fname)	// виведення файлу на екран
 	string s;				// прочитаний рядок
 	while (getline(fin, s)) // поки можна прочитати рядок
 	{
-		cout << s << endl;	// виводимо його на екран
+		cout << "Довжина найдовшого слова = " << s << endl;	// виводимо його на екран
 	}
 	cout << endl;
 }
@@ -44,24 +46,25 @@ void ProcessTXT(char* fname, char* gname)					// підрахунок довжи
 	ifstream f(fname);										// відкрили файл для зчитування
 	ofstream g(gname);										// відкрили файл для запису
 	string s;
-	int k = 0;												// довжина слова
-	int max = 0;											// мінімальне значення
+	char tmp[256];												// довжина слова
+	char max[256];											// мінімальне значення
 
 	while (getline(f, s))									// поки можна прочитати рядок скануємо його і обчислюємо довжину
 	{
 		for (int i = 0; i < s.length(); i++)
 		{
-			k++;											// лічильник довжини слова
-			if ((s[i + 1] == ' ') || (s[i + 1] == '\0'))	// якщо наступний символ пробіл або нуль-символ, то
+			istringstream ist(s); // перетворює рядок у потік
+			ist >> max;
+			while (ist >> tmp)
 			{
-				if (max == 0)								// якщо min=0 — це значить, що я знайшов перше слово та
-					max = k;								// мінімальним значенням за замовчуванням буде довжина першого слова
-				if (k > max)
-					max = k;								// якщо довжина слова менше min, то присвоюєм нове значення для min
-				k = -1;										// обнуляємо довжину слова. -1, тому що наступний символ у циклі це
-			}												// пробіл, а його рахувати не треба
+				if (strlen(tmp) > strlen(max))
+					strcpy(max, tmp);
+			}
 		}
-		g << max << endl;									// записуємо його у файл g
+		g << max << endl;
+
+		cout << "Довжина найдовшого слова = " << strlen(max) << endl;
+		cout << "Найдовше слово = " << max << endl << endl;
 	}
 }
 
@@ -80,7 +83,6 @@ int main()
 	cout << "Ввести ім'я другого файлу: "; cin >> gname;
 
 	ProcessTXT(fname, gname);	// ввели рядки файлу з клавіатури
-	PrintTXT(gname);			// вивели вміст першого файлу на екран
 
 	return 0;
 }
