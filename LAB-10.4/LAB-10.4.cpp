@@ -36,7 +36,7 @@ void PrintTXT(char* fname)	// виведення файлу на екран
 	string s;				// прочитаний рядок
 	while (getline(fin, s)) // поки можна прочитати рядок
 	{
-		cout << "Довжина найдовшого слова = " << s << endl;	// виводимо його на екран
+		cout << s << endl;	// виводимо його на екран
 	}
 	cout << endl;
 }
@@ -46,19 +46,19 @@ void ProcessTXT(char* fname, char* gname)					// підрахунок довжи
 	ifstream f(fname);										// відкрили файл для зчитування
 	ofstream g(gname);										// відкрили файл для запису
 	string s;
-	char tmp[256];												// довжина слова
-	char max[256];											// мінімальне значення
+	char tmp[256];
+	char max[256];											// максимальне значення
 
 	while (getline(f, s))									// поки можна прочитати рядок скануємо його і обчислюємо довжину
 	{
 		for (int i = 0; i < s.length(); i++)
 		{
-			istringstream ist(s); // перетворює рядок у потік
+			istringstream ist(s);							// перетворює рядок у потік
 			ist >> max;
 			while (ist >> tmp)
 			{
-				if (strlen(tmp) > strlen(max))
-					strcpy(max, tmp);
+				if (strlen(tmp) > strlen(max))				// якщо довжина слова більша ніж max,
+					strcpy(max, tmp);						// то присвоюєм нове значення для max
 			}
 		}
 		g << max << endl;
